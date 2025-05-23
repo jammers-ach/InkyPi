@@ -70,14 +70,14 @@ def take_screenshot_html(html_str, dimensions, timeout_ms=None):
     image = None
     try:
         # Create a temporary HTML file
-        with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as html_file:
+        html_file_path="weather.html"
+        with open(html_file_path, "wb") as html_file:
             html_file.write(html_str.encode("utf-8"))
-            html_file_path = html_file.name
 
         image = take_screenshot(html_file_path, dimensions, timeout_ms)
 
         # Remove html file
-        os.remove(html_file_path)
+        #os.remove(html_file_path)
 
     except Exception as e:
         logger.error(f"Failed to take screenshot: {str(e)}")
@@ -88,15 +88,15 @@ def take_screenshot(target, dimensions, timeout_ms=None):
     image = None
     try:
         # Create a temporary output file for the screenshot
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as img_file:
-            img_file_path = img_file.name
+        img_file_path="weather.png"
 
         command = [
-            "chromium-headless-shell", target, "--headless",
+            "chromium", target, "--headless",
             f"--screenshot={img_file_path}", f'--window-size={dimensions[0]},{dimensions[1]}',
             "--no-sandbox", "--disable-gpu", "--disable-software-rasterizer",
             "--disable-dev-shm-usage", "--hide-scrollbars"
         ]
+        logger.info("command is \"%s\""," ".join(command))
         if timeout_ms:
             command.append(f"--timeout={timeout_ms}")
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -111,9 +111,9 @@ def take_screenshot(target, dimensions, timeout_ms=None):
         image = Image.open(img_file_path)
 
         # Remove image files
-        os.remove(img_file_path)
+        #os.remove(img_file_path)
 
     except Exception as e:
         logger.error(f"Failed to take screenshot: {str(e)}")
-    
+
     return image

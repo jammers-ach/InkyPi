@@ -2,7 +2,7 @@
 
 # entry script to launch the service
 
-PROGRAM_PATH=/usr/local/inkypi
+PROGRAM_PATH=/home/jammers/programming/InkyPi/
 VENV_PATH="$PROGRAM_PATH/venv_inkypi"
 
 source "$VENV_PATH/bin/activate"

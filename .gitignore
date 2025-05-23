@@ -162,3 +162,9 @@ cython_debug/
 
 # Ignore Mac DS_Store files
 .DS_Store
+
+
+weather.html
+weather.png
+src/static/images/current_image.png
+src/config/device.json

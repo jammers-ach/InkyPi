@@ -27,6 +27,7 @@ from blueprints.plugin import plugin_bp
 from blueprints.playlist import playlist_bp
 from jinja2 import ChoiceLoader, FileSystemLoader
 from plugins.plugin_registry import load_plugins
+from enk_server import EnkServer
 
 
 logger = logging.getLogger(__name__)
@@ -63,6 +64,8 @@ if __name__ == '__main__':
     if not is_running_from_reloader():
         refresh_task.start()
 
+    enkserver = EnkServer()
+
     # display default inkypi image on startup
     if device_config.get_config("startup") is True:
         logger.info("Startup flag is set, displaying startup image")
@@ -71,8 +74,10 @@ if __name__ == '__main__':
         device_config.update_value("startup", False, write=True)
 
     try:
+        enkserver.start()
         # Run the Flask app
         app.secret_key = str(random.randint(100000,999999))
-        app.run(host="0.0.0.0", port=80)
+        app.run(host="0.0.0.0", port=8080)
     finally:
         refresh_task.stop()
+        enkserver.stop()
